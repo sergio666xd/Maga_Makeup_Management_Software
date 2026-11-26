@@ -9,13 +9,13 @@ Responsables: se asignan en Notion (columna *Responsable(s)*) y en el issue de G
 | ID | Historia | Rol | Depende de | Notion |
 | --- | --- | --- | --- | --- |
 | SETUP | Esqueleto Next.js + FastAPI, Supabase local, login, `perfiles`, CI y deploy en Vercel | Equipo | — | — |
-| HU01 | Registrar pedido (clienta con teléfono obligatorio, productos, cantidades, modalidad de pago) | Dueña | SETUP | [abrir](https://app.notion.com/p/424ba7e1c16e81caa1d9c48ae8909234) |
+| HU01 | Registrar pedido (cliente con teléfono obligatorio, productos, cantidades, modalidad de pago) | Dueña | SETUP | [abrir](https://app.notion.com/p/424ba7e1c16e81caa1d9c48ae8909234) |
 | HU02 | Verificar inventario automáticamente al guardar el pedido | Dueña | HU01 (tabla `productos`) | [abrir](https://app.notion.com/p/424ba7e1c16e8139804afa240a190033) |
 | HU03 | Calcular total y si requiere cuota inicial (RN01) | Dueña | HU01 | [abrir](https://app.notion.com/p/424ba7e1c16e819a99b0dcfb8267d25b) |
 | HU10 | Generar deuda automáticamente según el valor del pedido | Contador | HU01, HU03 | [abrir](https://app.notion.com/p/424ba7e1c16e81c5a631ff1c3c1ca07a) |
 | HU11 | Consultar estado de cuenta y exportarlo a PDF | Contador | HU10 | [abrir](https://app.notion.com/p/424ba7e1c16e81298c92e161241a1ef3) |
 
-Orden sugerido: SETUP primero (día 1). HU01 define `clientas`, `productos`, `pedidos` y `detalle_pedido`; HU02 y HU03 pueden avanzar en paralelo con las funciones de `backend/reglas/` mientras HU01 termina la migración. HU10 y HU11 empiezan con las reglas y vistas, y se conectan cuando HU01 esté en `main`.
+Orden sugerido: SETUP primero (día 1). HU01 define `clientes`, `productos`, `pedidos` y `detalle_pedido`; HU02 y HU03 pueden avanzar en paralelo con las funciones de `backend/reglas/` mientras HU01 termina la migración. HU10 y HU11 empiezan con las reglas y vistas, y se conectan cuando HU01 esté en `main`.
 
 > HU10 necesita los estados *Entregado* y *Cuota Inicial Abonada*, que llegan en el sprint 2 (HU04, HU08). En el sprint 1 se implementan el servicio `generar_deuda` y sus pruebas, y un disparador temporal para probarlo; en el sprint 2 se conecta a esas transiciones.
 

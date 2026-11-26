@@ -4,7 +4,7 @@ Contexto para Claude cuando trabaja en este repositorio. Cinco personas del equi
 
 ## El proyecto
 
-Software de gestión de pedidos, inventario y cartera para **Maga Make Up**, una microempresa de maquillaje de Medellín que vende por llamada y WhatsApp, de contado y a crédito. Usuarios: la **Dueña** y el **Contador**. Las clientas no usan el sistema; reciben su estado de cuenta por WhatsApp.
+Software de gestión de pedidos, inventario y cartera para **Maga Make Up**, una microempresa de maquillaje de Medellín que vende por llamada y WhatsApp, de contado y a crédito. Usuarios: la **Dueña** y el **Contador**. Los clientes no usan el sistema; reciben su estado de cuenta por WhatsApp.
 
 **Lee [docs/CONTEXTO.md](docs/CONTEXTO.md) al empezar cada sesión.** Ahí están el negocio, los roles, el ciclo del pedido, cuándo nace una deuda, el glosario y los temas abiertos.
 
@@ -45,7 +45,7 @@ Antes de dar una tarea por terminada, corre el lint, el typecheck y las pruebas 
 ## Skills y herramientas
 
 - [docs/skills.md](docs/skills.md) lista las skills útiles y cuándo usarlas (diseño de interfaz, FastAPI, pruebas, revisión, seguridad, PDF). **No todos los integrantes las tienen instaladas**: si una no está disponible, sigue el enfoque que describe ese documento con las reglas de este repo. Ninguna skill reemplaza CLAUDE.md ni `docs/`; si chocan, mandan las reglas del repo.
-- Usa `security-review` antes de pedir review de cambios en login, roles, el webhook de WhatsApp o datos de clientas.
+- Usa `security-review` antes de pedir review de cambios en login, roles, el webhook de WhatsApp o datos de clientes.
 - Si existe `graphify-out/graph.json`, consulta el grafo (`graphify query "..."`, `graphify explain "..."`) antes de buscar archivo por archivo. Ver [CONTRIBUTING.md](CONTRIBUTING.md#9-graphify-mapa-del-repositorio).
 
 ## WhatsApp
@@ -54,11 +54,11 @@ Se usa la **Cloud API de Meta** para estados de cuenta y notificaciones de pedid
 
 ## Convenciones
 
-- **Idioma del código**: conceptos del negocio en español y sin tildes (`pedido`, `clienta`, `cuota_inicial`, `abono`, `saldo_pendiente`). Lo técnico puede ir en inglés. Textos de la interfaz en español con tildes.
+- **Idioma del código**: conceptos del negocio en español y sin tildes (`pedido`, `cliente`, `cuota_inicial`, `abono`, `saldo_pendiente`). Lo técnico puede ir en inglés. Textos de la interfaz en español con tildes.
 - **Nombres**: Python y tablas en `snake_case` (tablas en plural: `pedidos`, `detalle_pedido`); TypeScript en `camelCase`; componentes React en `PascalCase`. La API responde JSON en `snake_case`.
 - **Dinero**: pesos colombianos **enteros** (`int` en Python, `number` entero en TS, `bigint` en Postgres). Nunca `float` ni `numeric` con decimales. En la interfaz: `Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 })`.
 - **Estados**: usa exactamente los valores de [docs/arquitectura.md](docs/arquitectura.md#estados-del-pedido). No inventes estados sin actualizar ese documento.
-- **Errores**: la API responde `422` con el campo y un mensaje en español para validaciones (los mensajes que piden los escenarios, por ejemplo *"La cuota inicial debe estar entre $10.000 y $100.000"*), y `409` para conflictos (clienta o proveedor duplicado).
+- **Errores**: la API responde `422` con el campo y un mensaje en español para validaciones (los mensajes que piden los escenarios, por ejemplo *"La cuota inicial debe estar entre $10.000 y $100.000"*), y `409` para conflictos (cliente o proveedor duplicado).
 - **Base de datos**: solo con migraciones nuevas. Nunca edites una migración ya fusionada en `main`. Toda tabla nueva lleva RLS activado.
 - **Pruebas**: cada escenario "Dado / Cuando / Entonces" de la HU tiene una prueba cuyo nombre cita la HU y el escenario: `test_hu03_e3_credito_desde_100000_requiere_cuota`.
 - **Secretos**: nunca en el código ni en commits. `DATABASE_URL` y la `service_role` key solo existen en el backend.

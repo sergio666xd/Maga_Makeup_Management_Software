@@ -6,14 +6,14 @@
 
 ## Contexto
 
-HU12 pide que **el sistema envíe** por WhatsApp el estado de cuenta en PDF cada quincena. La revisión del backlog advirtió que abrir WhatsApp con un mensaje listo (`wa.me`) no es lo mismo que un envío del sistema. Además, el equipo quiere avisar a las clientas de cambios en su pedido.
+HU12 pide que **el sistema envíe** por WhatsApp el estado de cuenta en PDF cada quincena. La revisión del backlog advirtió que abrir WhatsApp con un mensaje listo (`wa.me`) no es lo mismo que un envío del sistema. Además, el equipo quiere avisar a los clientes de cambios en su pedido.
 
 ## Decisión
 
 Usar la **WhatsApp Cloud API de Meta** (Graph API) desde el backend FastAPI para:
 
 1. **Estados de cuenta** (HU12): plantilla de categoría *utility* con encabezado de documento (el PDF) y el saldo en el cuerpo.
-2. **Notificaciones de pedido**: plantillas *utility* para cambios de estado relevantes para la clienta.
+2. **Notificaciones de pedido**: plantillas *utility* para cambios de estado relevantes para el cliente.
 
 Todo el código de WhatsApp vive en `backend/whatsapp/` y ningún otro módulo llama a Meta directamente.
 
@@ -27,9 +27,9 @@ backend/whatsapp/
 
 ## Cómo funciona
 
-- **Plantillas aprobadas**: fuera de la ventana de 24 horas desde el último mensaje de la clienta, Meta solo deja enviar plantillas aprobadas. Todos los envíos del sistema son plantillas. Se crean en el WhatsApp Manager con categoría **utilidad** (no marketing): mensajes cortos, sobre una transacción concreta de la clienta y sin promociones.
+- **Plantillas aprobadas**: fuera de la ventana de 24 horas desde el último mensaje del cliente, Meta solo deja enviar plantillas aprobadas. Todos los envíos del sistema son plantillas. Se crean en el WhatsApp Manager con categoría **utilidad** (no marketing): mensajes cortos, sobre una transacción concreta del cliente y sin promociones.
 - **PDF**: se sube a la Cloud API como media (o se publica con un enlace firmado de corta duración) y se envía como encabezado `document` de la plantilla.
-- **Teléfono**: se envía en formato E.164 (`57` + número). `backend/reglas/` normaliza el teléfono guardado de la clienta.
+- **Teléfono**: se envía en formato E.164 (`57` + número). `backend/reglas/` normaliza el teléfono guardado del cliente.
 - **Estados de entrega**: Meta avisa por webhook si el mensaje fue `sent`, `delivered`, `read` o `failed`. Se guardan en `envios_estado_cuenta` / `notificaciones` para cumplir HU12 E3 ("fecha del último envío").
 - **Webhook**: `GET /api/whatsapp/webhook` responde el reto con `WHATSAPP_VERIFY_TOKEN`; `POST` valida la firma `X-Hub-Signature-256` con `WHATSAPP_APP_SECRET` antes de procesar nada.
 - **Pruebas**: en CI y en local nunca se llama a Meta; `cliente.py` se reemplaza por un doble de prueba. Solo el número de prueba de Meta se usa en desarrollo.
@@ -64,7 +64,7 @@ Reglas de redacción: frases cortas, tuteo cordial, datos concretos (número de 
 - Requiere una cuenta de **Meta Business**, una app con el producto WhatsApp y un número dedicado. Un número que ya se usa en la app WhatsApp Business del celular necesita migrarse (o usar la coexistencia que ofrezca Meta). Sergio/el Product Owner lo gestionan con la dueña.
 - Las plantillas tardan en aprobarse: se envían a revisión **antes del sprint 3** (meta: 5 de diciembre).
 - Meta cobra por mensaje de plantilla según la categoría y el país; el volumen quincenal es bajo, pero la dueña debe conocer el costo.
-- Las clientas deben haber aceptado recibir mensajes por WhatsApp (opt-in). Se agrega `acepta_whatsapp` a `clientas`.
+- Los clientes deben haber aceptado recibir mensajes por WhatsApp (opt-in). Se agrega `acepta_whatsapp` a `clientes`.
 - Las notificaciones de pedido no están en ninguna HU: se proponen como HU nueva o como tarea técnica del sprint 3 si alcanza el tiempo.
 
 ## Alternativas consideradas

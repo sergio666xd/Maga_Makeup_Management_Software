@@ -54,7 +54,7 @@ Por eso **todas** las rutas de FastAPI empiezan con `/api` y Next.js no define r
 │   ├── servicios/            # Casos de uso: reglas + base de datos en una transacción
 │   ├── whatsapp/             # Cloud API de Meta: cliente, plantillas, webhook (ADR 0002)
 │   ├── routers/              # Endpoints por módulo
-│   │   ├── clientas.py  pedidos.py  inventario.py  proveedores.py
+│   │   ├── clientes.py  pedidos.py  inventario.py  proveedores.py
 │   │   ├── compras.py   despacho.py  cartera.py   estados_cuenta.py
 │   └── tests/
 │       ├── reglas/           # pruebas unitarias por HU y escenario
@@ -63,7 +63,7 @@ Por eso **todas** las rutas de FastAPI empiezan con `/api` y Next.js no define r
 │   ├── app/
 │   │   ├── login/
 │   │   └── (panel)/          # rutas protegidas
-│   │       ├── pedidos/  clientas/  inventario/  proveedores/
+│   │       ├── pedidos/  clientes/  inventario/  proveedores/
 │   │       ├── compras/  despacho/  cartera/
 │   ├── components/
 │   │   └── ui/               # componentes shadcn/ui (compartidos)
@@ -87,25 +87,25 @@ Cada HU crea las tablas que necesita en su migración. Esta es la forma acordada
 | Tabla | Columnas principales | HU |
 | --- | --- | --- |
 | `perfiles` | `user_id` (FK auth.users), `nombre`, `rol` (`duena` \| `contador`) | SETUP |
-| `clientas` | `id`, `nombre`, `telefono` (único, obligatorio), `centro_comercial`, `local`, `direccion`, `acepta_whatsapp`, `creado_en` | HU01, HU13 |
+| `clientes` | `id`, `nombre`, `telefono` (único, obligatorio), `centro_comercial`, `local`, `direccion`, `acepta_whatsapp`, `creado_en` | HU01, HU13 |
 | `productos` | `id`, `referencia` (única), `nombre`, `valor_venta`, `existencia` (≥ 0) | HU02, HU07 |
 | `proveedores` | `id`, `nombre`, `telefono` (único), `creado_en` | HU06 |
 | `proveedor_productos` | `proveedor_id`, `producto_id` | HU06 |
-| `pedidos` | `id`, `consecutivo` (serial), `clienta_id`, `modalidad_pago` (`contado` \| `credito`), `estado`, `estado_pago`, `total`, `cuota_inicial`, `requiere_compra`, `modalidad_entrega` (`domicilio` \| `bodega`), `direccion_entrega`, `fecha_entrega_acordada`, `costo_envio`, `mensajero_id`, `creado_en` | HU01–HU05, HU08, HU09 |
+| `pedidos` | `id`, `consecutivo` (serial), `cliente_id`, `modalidad_pago` (`contado` \| `credito`), `estado`, `estado_pago`, `total`, `cuota_inicial`, `requiere_compra`, `modalidad_entrega` (`domicilio` \| `bodega`), `direccion_entrega`, `fecha_entrega_acordada`, `costo_envio`, `mensajero_id`, `creado_en` | HU01–HU05, HU08, HU09 |
 | `detalle_pedido` | `pedido_id`, `producto_id`, `cantidad` (> 0), `valor_unitario` | HU01, HU03 |
 | `pagos` | `id`, `pedido_id`, `tipo` (`cuota_inicial` \| `contado`), `valor`, `fecha`, `medio`, `comprobante`, `registrado_por` | HU04, HU09 |
 | `compras` | `id`, `proveedor_id`, `pedido_id` (opcional), `fecha`, `estado` | HU05, HU07 |
 | `detalle_compra` | `compra_id`, `producto_id`, `cantidad_comprada`, `cantidad_recibida`, `calidad` (`aprobada` \| `rechazada`), `observaciones`, `precio_compra` | HU07 |
 | `mensajeros` | `id`, `nombre`, `telefono` | HU08 |
-| `deudas` | `id`, `pedido_id` (único), `clienta_id`, `valor_total`, `saldo`, `estado` (`abierta` \| `cerrada`), `creada_en`, `cerrada_en` | HU10, HU16 |
+| `deudas` | `id`, `pedido_id` (único), `cliente_id`, `valor_total`, `saldo`, `estado` (`abierta` \| `cerrada`), `creada_en`, `cerrada_en` | HU10, HU16 |
 | `abonos` | `id`, `deuda_id`, `valor` (> 0), `fecha`, `medio`, `comprobante`, `registrado_por` | HU14 |
-| `envios_estado_cuenta` | `id`, `clienta_id`, `fecha`, `saldo_enviado`, `whatsapp_message_id`, `estado_entrega` (`sent` \| `delivered` \| `read` \| `failed`) | HU12 |
-| `notificaciones` | `id`, `clienta_id`, `pedido_id`, `plantilla`, `whatsapp_message_id`, `estado_entrega`, `creado_en` | ADR 0002 |
+| `envios_estado_cuenta` | `id`, `cliente_id`, `fecha`, `saldo_enviado`, `whatsapp_message_id`, `estado_entrega` (`sent` \| `delivered` \| `read` \| `failed`) | HU12 |
+| `notificaciones` | `id`, `cliente_id`, `pedido_id`, `plantilla`, `whatsapp_message_id`, `estado_entrega`, `creado_en` | ADR 0002 |
 
 Vistas derivadas (no se guardan a mano, así se cumple RN07):
 
-- `lista_deudores`: clientas con suma de `saldo` de deudas abiertas > 0, con teléfono, local y saldo (HU13, HU16).
-- `movimientos_estado_cuenta`: unión de deudas (cargos) y abonos por clienta, ordenada por fecha (HU11, HU15).
+- `lista_deudores`: clientes con suma de `saldo` de deudas abiertas > 0, con teléfono, local y saldo (HU13, HU16).
+- `movimientos_estado_cuenta`: unión de deudas (cargos) y abonos por cliente, ordenada por fecha (HU11, HU15).
 
 `medio` admite: `efectivo`, `transferencia_bancolombia`, `transferencia_nequi`. Si es transferencia, `comprobante` es obligatorio (RN04).
 
@@ -121,7 +121,7 @@ Vistas derivadas (no se guardan a mano, así se cumple RN07):
 | `autorizado` | Compra al proveedor autorizada | Requiere compra y (no requiere cuota, o ya está abonada) (HU05) |
 | `listo_para_recoger` | Listo en bodega | Pasa la verificación de despacho con modalidad bodega (HU08) |
 | `despachado` | Salió con el mensajero | Pasa la verificación de despacho con modalidad domicilio (HU08) |
-| `entregado` | La clienta lo recibió | Se registra la entrega o la recogida; si es crédito < $100.000, se crea la deuda (HU10) |
+| `entregado` | El cliente lo recibió | Se registra la entrega o la recogida; si es crédito < $100.000, se crea la deuda (HU10) |
 | `cerrado` | Terminado | Contado entregado y pagado, o su deuda llegó a $0 (HU16) |
 
 `pedidos.estado_pago` (solo pedidos de contado): `pendiente_de_pago` → `pagado` (HU09). En pedidos a crédito es `null`.
@@ -136,7 +136,7 @@ En la interfaz se muestran con su nombre legible: "Registrado", "Esperando cuota
 
 | Módulo | Dueña | Contador |
 | --- | --- | --- |
-| Clientas, pedidos, cuota inicial, pago de contado, despacho | ✔ | consulta |
+| Clientes, pedidos, cuota inicial, pago de contado, despacho | ✔ | consulta |
 | Proveedores y compras | ✔ | consulta |
 | Llegada de productos (HU07) | ✔ | ✔ |
 | Deudas, estados de cuenta, lista de deudores | consulta | ✔ |

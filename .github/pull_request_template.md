@@ -24,7 +24,7 @@ HU: <!-- HUxx - Nombre --> · Issue: closes #<!-- número -->
 - [ ] Las reglas de negocio están en `backend/reglas/` con sus pruebas
 - [ ] Lint, tipos y pruebas pasan en local
 - [ ] Actualicé `docs/` si cambió una regla, un estado o el modelo de datos
-- [ ] No hay secretos ni datos reales de clientas
+- [ ] No hay secretos ni datos reales de clientes
 
 ## Capturas o video
 

@@ -41,7 +41,7 @@ chore: configurar pytest en CI
 docs: aclarar RN02 en reglas de negocio
 ```
 
-Commits pequeños y que pasen las pruebas. No subas `.env.local`, llaves ni datos reales de clientas.
+Commits pequeños y que pasen las pruebas. No subas `.env.local`, llaves ni datos reales de clientes.
 
 ## 4. Pull requests
 
