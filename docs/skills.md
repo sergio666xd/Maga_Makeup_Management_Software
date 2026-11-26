@@ -31,7 +31,7 @@ Las *skills* son instrucciones empaquetadas que Claude carga cuando la tarea lo 
 | Skill | Úsala para |
 | --- | --- |
 | `code-review` | Revisar tu diff o el PR de un compañero antes de aprobarlo. |
-| `security-review` | Antes de fusionar algo que toque login, roles, webhook de WhatsApp o datos de clientas. |
+| `security-review` | Antes de fusionar algo que toque login, roles, webhook de WhatsApp o datos de clientes. |
 | `simplify` | Limpiar código que funciona pero quedó enredado. |
 | `engineering:debug` | Errores que no se entienden ("funciona local y no en el preview"). |
 | `engineering:code-review` | Alternativa del plugin engineering para revisar seguridad, rendimiento y casos borde. |

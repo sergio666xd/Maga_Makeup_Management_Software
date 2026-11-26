@@ -42,15 +42,15 @@ Cuando el producto regresa a la bodega:
 
 | Situación | Quién paga el envío |
 | --- | --- |
-| Nadie recibió el pedido | Clienta |
-| La clienta devuelve y compró **menos de 2** productos | Clienta |
-| La clienta devuelve y compró **2 o más** productos | Empresa |
+| Nadie recibió el pedido | Cliente |
+| El cliente devuelve y compró **menos de 2** productos | Cliente |
+| El cliente devuelve y compró **2 o más** productos | Empresa |
 
 > Ninguna de las 16 HU actuales implementa devoluciones. Ver tema abierto en [CONTEXTO.md](CONTEXTO.md#abiertos-confirmar-con-el-product-owner-antes-de-implementar-lo-que-afecten).
 
 ## RN03 · Costo de envío regular
 
-En entregas a domicilio, la clienta paga el envío y su costo se suma al pedido al verificar el despacho (HU08). Recoger en bodega no tiene costo de envío.
+En entregas a domicilio, el cliente paga el envío y su costo se suma al pedido al verificar el despacho (HU08). Recoger en bodega no tiene costo de envío.
 
 ## RN04 · Medios de pago
 
@@ -63,7 +63,7 @@ HU relacionadas: HU04, HU09, HU14.
 
 ## RN05 · Flexibilidad de abonos
 
-- La clienta abona cualquier monto, sin cifra fija.
+- El cliente abona cualquier monto, sin cifra fija.
 - Válido si `0 < abono <= saldo`. Un abono de $0, negativo o mayor al saldo se rechaza mostrando el motivo.
 - `saldo_nuevo = saldo_anterior − abono`.
 
@@ -71,15 +71,15 @@ HU relacionadas: HU14, HU15, HU16.
 
 ## RN06 · Tiempos de cobro
 
-- La difusión de cobro (estado de cuenta por WhatsApp) se envía **el día de la quincena** a las clientas con saldo pendiente.
+- La difusión de cobro (estado de cuenta por WhatsApp) se envía **el día de la quincena** a los clientes con saldo pendiente.
 - El cobro presencial es **al día siguiente**.
-- Las clientas con saldo $0 no reciben envío.
+- Los clientes con saldo $0 no reciben envío.
 
 HU relacionadas: HU12, HU13.
 
 ## RN07 · Estado de cuenta
 
-- Existe desde la primera deuda de la clienta y se actualiza **automáticamente** con cada deuda nueva o abono. Nadie lo edita a mano.
+- Existe desde la primera deuda del cliente y se actualiza **automáticamente** con cada deuda nueva o abono. Nadie lo edita a mano.
 - Muestra nombre, teléfono, fecha de consulta y cada compra con su valor, abonos y saldo, ordenados por fecha.
 - Se exporta a PDF con la misma información de la pantalla.
 
@@ -91,7 +91,7 @@ Cuando el saldo de una deuda llega a $0, el sistema automáticamente:
 
 1. Cierra la deuda.
 2. Marca su pedido como **Cerrado**.
-3. Retira a la clienta de la lista de deudores **si no le quedan otras deudas abiertas**. Si le quedan, sigue en la lista con el saldo de las demás.
+3. Retira al cliente de la lista de deudores **si no le quedan otras deudas abiertas**. Si le quedan, sigue en la lista con el saldo de las demás.
 
 Si después se le genera una deuda nueva, vuelve a la lista.
 
@@ -99,7 +99,7 @@ HU relacionadas: HU13, HU16.
 
 ## Otras reglas de los criterios de aceptación
 
-- **Teléfono de la clienta** obligatorio y único (HU01).
+- **Teléfono del cliente** obligatorio y único (HU01).
 - **Proveedor** único por teléfono; nombre y teléfono obligatorios (HU06).
 - **Total del pedido** = Σ cantidad × valor unitario; se recalcula con cada cambio (HU03).
 - **Inventario**: existencia ≥ cantidad pedida → *Disponible*; si no, se muestran las unidades que faltan y el pedido requiere compra (HU02).

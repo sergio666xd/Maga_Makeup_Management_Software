@@ -1,6 +1,6 @@
 # Maga Make Up · Gestión de pedidos y estados de cuenta
 
-Software para que Maga Make Up registre los pedidos que llegan por llamada o WhatsApp, controle el inventario y la compra al proveedor, y lleve la cartera de sus clientas: deudas, abonos, estados de cuenta y el cobro quincenal por WhatsApp.
+Software para que Maga Make Up registre los pedidos que llegan por llamada o WhatsApp, controle el inventario y la compra al proveedor, y lleve la cartera de sus clientes: deudas, abonos, estados de cuenta y el cobro quincenal por WhatsApp.
 
 Lo desarrolla el **Equipo 2.6** (Ingeniería de Software, UNAL Medellín) en tres sprints, del 27 de noviembre al 15 de diciembre de 2026.
 
@@ -63,5 +63,5 @@ pnpm build                        # build de producción del frontend
 
 ## Roles del sistema
 
-- **Dueña**: registra clientas, pedidos y proveedores; gestiona cuota inicial, pagos de contado y despacho.
+- **Dueña**: registra clientes, pedidos y proveedores; gestiona cuota inicial, pagos de contado y despacho.
 - **Contador**: registra la llegada de productos, consulta deudas y estados de cuenta, registra abonos y envía los estados de cuenta.
