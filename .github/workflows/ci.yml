@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Cada job se salta solo mientras su parte no exista (antes de la tarea SETUP).
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: ¿Hay frontend?
+        id: check
+        run: test -f package.json && echo "ok=true" >> "$GITHUB_OUTPUT" || echo "ok=false" >> "$GITHUB_OUTPUT"
+      - uses: pnpm/action-setup@v4
+        if: steps.check.outputs.ok == 'true'
+      - uses: actions/setup-node@v4
+        if: steps.check.outputs.ok == 'true'
+        with:
+          node-version: 20
+          cache: pnpm
+      - if: steps.check.outputs.ok == 'true'
+        run: pnpm install --frozen-lockfile
+      - if: steps.check.outputs.ok == 'true'
+        run: pnpm lint
+      - if: steps.check.outputs.ok == 'true'
+        run: pnpm typecheck
+      - if: steps.check.outputs.ok == 'true'
+        run: pnpm build
+
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: ¿Hay backend?
+        id: check
+        run: test -f pyproject.toml && echo "ok=true" >> "$GITHUB_OUTPUT" || echo "ok=false" >> "$GITHUB_OUTPUT"
+      - uses: astral-sh/setup-uv@v6
+        if: steps.check.outputs.ok == 'true'
+      - if: steps.check.outputs.ok == 'true'
+        run: uv sync --frozen
+      - if: steps.check.outputs.ok == 'true'
+        run: uv run ruff check .
+      - if: steps.check.outputs.ok == 'true'
+        run: uv run ruff format --check .
+      - if: steps.check.outputs.ok == 'true'
+        run: uv run pytest

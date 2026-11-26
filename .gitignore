@@ -1,0 +1,45 @@
+# Dependencias
+node_modules/
+.pnpm-store/
+.venv/
+__pycache__/
+*.py[cod]
+
+# Builds
+.next/
+out/
+build/
+dist/
+*.egg-info/
+
+# Pruebas y herramientas
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+coverage/
+.coverage
+htmlcov/
+
+# Entorno y secretos
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Vercel y Supabase local
+.vercel/
+supabase/.branches/
+supabase/.temp/
+
+# graphify (grafo local de cada integrante)
+graphify-out/
+
+# Claude Code: configuración personal (la del proyecto sí se versiona)
+.claude/settings.local.json
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+*.swp
